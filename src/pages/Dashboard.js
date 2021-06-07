@@ -1,8 +1,11 @@
 import React from 'react';
+import { useAuth } from "../firebase";
 
 const Dashboard = () => {
-	return (
+	const { logout } = useAuth();
+	return (<>
 		<div>Dashboard</div>
+		<button onClick={logout}>log out</button></>
 	)
 };
 

@@ -16,6 +16,7 @@ function App() {
     let privateRoutes = (
         <Switch>
           <Route exact path={ROUTES.dashboard} component={Dashboard} />
+          <Redirect to={ROUTES.dashboard} />
         </Switch>
     );
 
