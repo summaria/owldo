@@ -6,33 +6,31 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from "@material-ui/core/styles";
 import Logo from '../assets/Logo.png';
-import { AlignCenter } from 'react-feather';
 
 const useStyles = makeStyles(() => ({
     container: {
       display:"flex",
-      padding:"4%",
-      paddingRight:"0%",
-      paddingTop:"0.5%",
       height:"100vh",
-	  backgroundColor:'#ffffff',
+	  backgroundColor:'#f3f3f3',
     },
 	box:{
 		display:"flex",
 		alignItems:"center",
 		justifyContent:"center",
-		height:"100%"
+		height:"100%",
+		padding:"1%"
 	},
     logoText: {
         fontWeight:'bold',
-        fontSize:74,
+        fontSize:"5rem",
         '&:hover':{
             cursor:'pointer'
-        }
+        },
     },
 	taglineText:{
 		fontWeight:'bold',
-		fontSize:44
+		fontSize:44,
+		color:"#00BFA6",
 	},
 	info:{
 		fontWeight:500,
@@ -59,17 +57,20 @@ const Landing = () => {
 		const history = useHistory();
 		return (
 			<Grid container className={classes.container}>
-			<Grid container item xs={6} className={classes.box}> 
+			<Grid container item direction="column" xs={6} className={classes.box}> 
 				<img src={Logo} height="25%"></img>
 				<h1 className = {classes.logoText} onClick={()=>{history.push('/')}}>Owl<span style={{color:"#00BFA6"}}>.</span>do</h1>
+				<h2 className={classes.taglineText}>Learn smarter.<br/>Learn better.</h2>
 			</Grid>
-			<Grid container item xs={6} className={classes.box} style={{backgroundColor:"#ffffff",width:"90%",height:"90%",borderRadius:100}}>
-						<p className = {classes.info}>
-							Make notes, generate summaries and analyse your reading habits by using <span style={{color:"#000000"}}>Owl.do</span> for your study sessions.
-                        </p>
-						<Button className = {classes.btn} onClick={()=>{history.push('/login')}}>
-                            Begin Now
-                        </Button>
+			<Grid container item direction="column" xs={6} className={classes.box}>
+				<Grid container item xs={12} style={{backgroundColor:"#ffffff",borderRadius:20}} className={classes.box}>
+					<p className = {classes.info}>
+								Make notes, generate summaries and analyse your reading habits by using <span style={{color:"#000000"}}>Owl.do</span> for your study sessions.
+							</p>
+							<Button className = {classes.btn} onClick={()=>{history.push('/login')}}>
+								Begin Now
+							</Button>
+					</Grid>
 			</Grid>
 	   </Grid>
 		);
