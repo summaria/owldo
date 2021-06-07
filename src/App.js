@@ -1,25 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+
+import { Route, Switch, BrowserRouter, Redirect } from "react-router-dom";
+import ROUTES from "./routes";
+import React from 'react';
+
+import { useAuth, AuthProvider } from "./firebase";
+
+import Landing from './pages/Landing.js';
+import Dashboard from './pages/Dashboard.js';
+import Signin from './pages/Signin';
+import Signup from './pages/Signup';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    let { currentUser } = useAuth();
+
+    let privateRoutes = (
+        <Switch>
+          <Route exact path={ROUTES.dashboard} component={Dashboard} />
+        </Switch>
+    );
+
+    let publicRoutes = (
+        <Switch>
+          <Route exact path={ROUTES.landing} component={Landing} />
+					<Route exact path={ROUTES.signin} component={Signin} />
+          <Route exact path={ROUTES.signup} component={Signup} />
+          <Redirect to={ROUTES.signin} />
+        </Switch>
+    );
+
+    return (
+      <BrowserRouter>
+        {
+            currentUser? privateRoutes: publicRoutes
+        }
+      </BrowserRouter>
+    );
 }
 
-export default App;
+const AuthfulApp = () => <AuthProvider><App /></AuthProvider>
+
+export default AuthfulApp;
