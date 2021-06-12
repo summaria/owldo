@@ -7,8 +7,8 @@ import { useAuth, AuthProvider } from "./firebase";
 
 import Landing from './pages/Landing.js';
 import Dashboard from './pages/Dashboard.js';
-import Signin from './pages/signin';
-import Signup from './pages/signup';
+import Signin from './pages/Signin';
+import Signup from './pages/Signup';
 
 function App() {
     let { currentUser } = useAuth();
