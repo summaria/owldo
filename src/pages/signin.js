@@ -2,10 +2,11 @@ import React from "react";
 import GoogleSigninButton from "../components/GoogleSigninButton";
 import { useAuth } from "../firebase";
 import { makeStyles } from "@material-ui/styles";
+import NavLayout from "../Layouts/NavLayout";
 
 const useStyles = makeStyles(() => ({
   container: {
-    height: "100vh",
+    height: "100%",
     width: "100%",
     display: "flex",
     alignItems: "center",
@@ -29,16 +30,18 @@ const Signin = () => {
   const { googleSignin } = useAuth();
   const classes = useStyles();
   return (
-    <div className={classes.container}>
-      <div className={classes.box}>
-        <h1>Sign in to continue</h1>
-        <GoogleSigninButton
-          logo="https://skipway.com/wp-content/uploads/2020/05/image-20150902-6700-t2axrz.jpg"
-          content="Sign in with Google"
-          handleClick={googleSignin}
-        />
+    <NavLayout>
+      <div className={classes.container}>
+        <div className={classes.box}>
+          <h1 style={{fontFamily:"Poppins"}}>Sign in to continue</h1>
+          <GoogleSigninButton
+            logo="https://skipway.com/wp-content/uploads/2020/05/image-20150902-6700-t2axrz.jpg"
+            content="Sign in with Google"
+            handleClick={googleSignin}
+          />
+        </div>
       </div>
-    </div>
+    </NavLayout>
   );
 };
 

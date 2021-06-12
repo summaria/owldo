@@ -58,7 +58,7 @@ const Landing = () => {
 		return (
 			<Grid container className={classes.container}>
 			<Grid container item direction="column" xs={6} className={classes.box}> 
-				<img src={Logo} height="25%"></img>
+				<img src={Logo} height="25%" alt="logo"></img>
 				<h1 className = {classes.logoText} onClick={()=>{history.push('/')}}>Owl<span style={{color:"#00BFA6"}}>.</span>do</h1>
 				<h2 className={classes.taglineText}>Learn smarter.<br/>Learn better.</h2>
 			</Grid>
