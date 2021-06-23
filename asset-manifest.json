@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/owldo/static/css/main.1dac5942.chunk.css",
+    "main.js": "/owldo/static/js/main.af6cfa6a.chunk.js",
+    "main.js.map": "/owldo/static/js/main.af6cfa6a.chunk.js.map",
+    "runtime-main.js": "/owldo/static/js/runtime-main.08523eee.js",
+    "runtime-main.js.map": "/owldo/static/js/runtime-main.08523eee.js.map",
+    "static/js/2.d382065b.chunk.js": "/owldo/static/js/2.d382065b.chunk.js",
+    "static/js/2.d382065b.chunk.js.map": "/owldo/static/js/2.d382065b.chunk.js.map",
+    "static/js/3.f70f40e7.chunk.js": "/owldo/static/js/3.f70f40e7.chunk.js",
+    "static/js/3.f70f40e7.chunk.js.map": "/owldo/static/js/3.f70f40e7.chunk.js.map",
+    "index.html": "/owldo/index.html",
+    "static/css/main.1dac5942.chunk.css.map": "/owldo/static/css/main.1dac5942.chunk.css.map",
+    "static/js/2.d382065b.chunk.js.LICENSE.txt": "/owldo/static/js/2.d382065b.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.08523eee.js",
+    "static/js/2.d382065b.chunk.js",
+    "static/css/main.1dac5942.chunk.css",
+    "static/js/main.af6cfa6a.chunk.js"
+  ]
+}
