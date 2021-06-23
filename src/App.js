@@ -2,13 +2,21 @@
 import { Route, Switch, BrowserRouter, Redirect } from "react-router-dom";
 import ROUTES from "./routes";
 import React from 'react';
-
+import { ThemeProvider } from "@material-ui/core/styles";
 import { useAuth, AuthProvider } from "./firebase";
 
 import Landing from './pages/Landing.js';
 import Dashboard from './pages/Dashboard.js';
 import Signin from './pages/Signin';
 import Signup from './pages/Signup';
+
+import { createMuiTheme } from "@material-ui/core/styles";
+
+const theme = createMuiTheme({
+  typography:{
+    fontFamily:'Solway'
+  }
+});
 
 function App() {
     let { currentUser } = useAuth();
@@ -30,11 +38,13 @@ function App() {
     );
 
     return (
-      <BrowserRouter>
-        {
-            currentUser? privateRoutes: publicRoutes
-        }
-      </BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
+          {
+              currentUser? privateRoutes: publicRoutes
+          }
+        </BrowserRouter>
+      </ThemeProvider>
     );
 }
 

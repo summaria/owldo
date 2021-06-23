@@ -15,6 +15,7 @@ const useStyles = makeStyles(() => ({
   box: {
     padding: "4%",
     border: "1px solid #e4e4e4",
+    backgroundColor:"#FFF",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",

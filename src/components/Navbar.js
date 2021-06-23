@@ -8,10 +8,10 @@ const NavBar = () => {
   return (
     <div style={{ flexGrow: 1 }}>
       <AppBar
-        position="fixed"
+        position="sticky"
         elevation={0}
         style={{
-          backgroundColor: "#FFF",
+          backgroundColor: "transparent",
         }}
       >
         <Toolbar variant="dense">
