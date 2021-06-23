@@ -5,6 +5,8 @@ import { makeStyles } from "@material-ui/styles";
 import SessionCard from "../components/SesssionCard";
 import NavLayout from "../Layouts/NavLayout";
 import ActionCard from "../components/ActionCard";
+import CustomButton from "../components/CustomButton";
+
 const data = {
   sessions: [
     {
@@ -54,16 +56,15 @@ const Dashboard = () => {
             <h1>Hey {currentUser.displayName},</h1>
             <Grid container>
               <Grid xs={6}>
-                {sessions ? (
-                  <>
-                    <Typography>Continue from where you left off</Typography>
-                    {sessions?.map((session) => (
-                      <SessionCard {...session} />
-                    ))}
-                  </>
-                ) : (
-                  <Typography>Start a new sessions</Typography>
-                )}
+				<Typography>Continue from where you left off</Typography>
+				{sessions?.map((session) => (
+					<SessionCard {...session} />
+				))}
+				<div style={{marginTop:24}}>
+				<CustomButton>
+					Start a session
+				</CustomButton>
+				</div>
               </Grid>
               <Grid xs={6}>
                 <Typography>What's on your mind today?</Typography>
