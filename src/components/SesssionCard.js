@@ -11,8 +11,8 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     height:80,
     width:"60%",
-    margin: "2%",
-    border:" 0.5px solid rgba(0, 0, 0, 0.8);",
+    marginTop: "2%",
+    border:"0.5px solid rgba(0, 0, 0, 0.8);",
     "&:hover":{
         opacity:0.8,
         backgroundColor:"rgba(255,255,255,0.6)",

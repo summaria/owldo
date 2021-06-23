@@ -1,66 +1,88 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { useAuth } from "../firebase";
-import {
-	Grid,
-	Typography,
-	Card
-} from "@material-ui/core";
+import { Grid, Typography, Card } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import SessionCard from "../components/SesssionCard";
 import NavLayout from "../Layouts/NavLayout";
-
+import ActionCard from "../components/ActionCard";
 const data = {
-	sessions: [
-		{
-			title:"The well being research",
-			date: "23rd February"
-		},
-		{
-			title:"Capstone research",
-			date: "20th February"
-		},
-	]
-}
+  sessions: [
+    {
+      title: "The well being research",
+      date: "23rd February",
+    },
+    {
+      title: "Capstone research",
+      date: "20th February",
+    },
+  ],
+  actions: [
+    {
+      title: "Generate text summaries",
+      src: "https://png.pngtree.com/element_our/png_detail/20181227/txt-vector-icon-png_287421.jpg",
+    },
+    {
+      title: "Make automated quizzes",
+      src: "https://png.pngtree.com/element_our/png_detail/20181227/txt-vector-icon-png_287421.jpg",
+    },
+    {
+      title: "Track your progress",
+      src: "https://png.pngtree.com/element_our/png_detail/20181227/txt-vector-icon-png_287421.jpg",
+    },
+  ],
+};
 
-const useDashboardStyles = makeStyles(()=>({
-	title: {
-
-	},
-	date: {
-
-	},
-	image:{
-		height:60,
-		width:60
-	}
+const useDashboardStyles = makeStyles(() => ({
+  title: {},
+  date: {},
+  image: {
+    height: 60,
+    width: 60,
+  },
 }));
 
 const Dashboard = () => {
-	const { logout } = useAuth();
-	
-	const [ sessions, setSessions ] = useState(data.sessions);
+  const { logout, currentUser } = useAuth();
 
-	const classes = useDashboardStyles();
-	return (
-	<>
-		<NavLayout>
-			<Grid container>
-				<Grid xs={6}>
-					<Typography>
-						Continue from where you left of
-					</Typography>
+  const [sessions, setSessions] = useState(data.sessions);
+  const classes = useDashboardStyles();
+  return (
+    <>
+      <NavLayout>
+        <Grid container style={{ margin: "0% 2% 0% 2%" }}>
+          <Grid xs={12}>
+            <h1>Hey {currentUser.displayName},</h1>
+            <Grid container>
+              <Grid xs={6}>
+                {sessions ? (
+                  <>
+                    <Typography>Continue from where you left off</Typography>
+                    {sessions?.map((session) => (
+                      <SessionCard {...session} />
+                    ))}
+                  </>
+                ) : (
+                  <Typography>Start a new sessions</Typography>
+                )}
+              </Grid>
+              <Grid xs={6}>
+                <Typography>What's on your mind today?</Typography>
+                <Grid container spacing={4} style={{marginTop:8}}>
 					{
-						sessions?.map(session => <SessionCard {...session} />)
+						data.actions.map(
+							action => <Grid item>
+							<ActionCard {...action} />
+						  </Grid>
+						)
 					}
-				</Grid>
-				<Grid xs={6}>
-
-				</Grid>
-			</Grid>
-			<button onClick={logout}>log out</button>
-		</NavLayout>
-	</>
-	)
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </NavLayout>
+    </>
+  );
 };
 
 export default Dashboard;
