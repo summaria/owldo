@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Button, Grid, Typography, TextField } from "@material-ui/core";
+import { Button, Grid, Typography, TextField, Modal } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { storage } from "../firebase/config";
 
@@ -58,18 +58,29 @@ const useStyles = makeStyles(() => ({
       transform: "scale(1.1)",
     },
   },
+  modal: {
+    padding: "2%",
+    backgroundColor: "#FFF",
+    outline: 0,
+    height: "30%",
+    width: "30%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    borderRadius: "2%",
+  },
 }));
 
 const CreateSession = () => {
   const classes = useStyles();
   const [fileURL, setfileURL] = useState("");
-
+  const [title, setTitle] = useState();
+  const [open, setOpen] = useState(false);
+  const [link, setLink] = useState("");
   const handleSubmit = () => {
     //TODO: function to store to db
   };
   const handleImageUpload = (e) => {
-    // TODO: function to upload images to gcp buckets.
-    const reader = new FileReader();
     let file = e.target.files[0]; // get the supplied file
 
     if (file) {
@@ -83,10 +94,41 @@ const CreateSession = () => {
       alert("Please upload an file first.");
     }
   };
-  const [title, setTitle] = useState();
   const ref = useRef();
   return (
     <Grid container direction="row" className={classes.root}>
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        aria-labelledby="link-modal"
+        aria-describedby="link-modal-description"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <div className={classes.modal}>
+          <Typography variant="h5">Enter your PDF/doc link here:</Typography>
+
+          <TextField
+            fullWidth
+            label="Link"
+            className={classes.titleField}
+            onChange={(e) => setLink(e.target.value)}
+          />
+          <Button
+            className={classes.btn}
+            style={{ marginTop: "4%" }}
+            onClick={(e) => {
+              setfileURL(link);
+              setOpen(false);
+            }}
+          >
+            Done
+          </Button>
+        </div>
+      </Modal>
       <Grid item xs={7} className={classes.left}>
         <Typography
           variant="h4"
@@ -126,7 +168,7 @@ const CreateSession = () => {
           <Grid item xs={6} container justify="center">
             <img
               className={classes.img}
-              onClick={() => ref.current.click()}
+              onClick={() => setOpen(true)}
               src={process.env.PUBLIC_URL + "/images/attach-url.png"}
             ></img>
           </Grid>
