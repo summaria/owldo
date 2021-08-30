@@ -1,7 +1,7 @@
 import userAPI from "./users";
 import sessionAPI from "./sessions";
 
-export default {
+export const FIRESTORE = {
   ...userAPI,
   ...sessionAPI,
 };

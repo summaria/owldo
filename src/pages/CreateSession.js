@@ -1,7 +1,19 @@
 import React, { useRef, useState } from "react";
-import { Button, Grid, Typography, TextField, Modal } from "@material-ui/core";
+import {
+  Button,
+  Grid,
+  Typography,
+  TextField,
+  Modal,
+  Fade,
+  CircularProgress,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { storage } from "../firebase/config";
+import { FIRESTORE } from "../api";
+import { auth } from "../firebase/config";
+import { useHistory } from "react-router";
+import ROUTES from "../routes";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -77,9 +89,22 @@ const CreateSession = () => {
   const [title, setTitle] = useState();
   const [open, setOpen] = useState(false);
   const [link, setLink] = useState("");
-  const handleSubmit = () => {
-    //TODO: function to store to db
+  const [loading, setLoading] = useState(false);
+  const history = useHistory();
+
+  const handleSubmit = async () => {
+    setLoading(true);
+
+    await FIRESTORE.createSession({
+      title,
+      fileURL,
+      userId: auth.currentUser.uid,
+    });
+
+    setLoading(false);
+    history.push(ROUTES.dashboard);
   };
+
   const handleImageUpload = (e) => {
     let file = e.target.files[0]; // get the supplied file
 
@@ -187,6 +212,14 @@ const CreateSession = () => {
             disableFocusRipple
           >
             Create Session
+            <Fade
+              in={loading}
+              style={{
+                transitionDelay: loading ? "800ms" : "0ms",
+              }}
+            >
+              <CircularProgress style={{ color: "#FFF" }} />
+            </Fade>
           </Button>
         </div>
       </Grid>
