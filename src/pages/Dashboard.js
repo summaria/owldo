@@ -1,5 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { firestore } from "../firebase/config";
+
 import { useAuth } from "../firebase";
+import { useHistory } from 'react-router-dom'
+
 import { Grid, Typography, Card } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import SessionCard from "../components/SesssionCard";
@@ -45,9 +49,34 @@ const useDashboardStyles = makeStyles(() => ({
 
 const Dashboard = () => {
   const { logout, currentUser } = useAuth();
-
-  const [sessions, setSessions] = useState(data.sessions);
+  const history = useHistory();
+  const [sessions, setSessions] = useState([]);
+  const [loading, setLoading] = useState(false);
   const classes = useDashboardStyles();
+
+  useEffect(async ()=>{
+    setLoading(true)
+    //console.log(JSON.stringify(currentUser))
+    const userRef =  firestore.collection("users").doc(currentUser.uid)
+    const user = await userRef.get();
+    if (!user.exists){
+      console.log("No user tf")
+    }
+    else{
+    //console.log("Session id's")
+    //console.log(JSON.stringify(user.data().sessions))
+    let userSessions = user.data().sessions
+    userSessions.forEach((userSession)=>{
+      const temp = firestore.collection("session").doc(userSession)
+      temp.get().then((tempSession)=>{
+        setSessions(arr => [...arr , tempSession.data()]);
+      })
+    })
+    }
+    setLoading(false)
+  },[])
+    
+
   return (
     <>
       <NavLayout>
@@ -61,7 +90,7 @@ const Dashboard = () => {
 					<SessionCard {...session} />
 				))}
 				<div style={{marginTop:24}}>
-				<CustomButton>
+				<CustomButton onClick={()=> history.push('/create-session')}>
 					Start a session
 				</CustomButton>
 				</div>
