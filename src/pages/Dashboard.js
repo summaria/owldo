@@ -11,6 +11,11 @@ import NavLayout from "../Layouts/NavLayout";
 import ActionCard from "../components/ActionCard";
 import CustomButton from "../components/CustomButton";
 
+//RandomStuff - Should be removed later
+
+import {questionModal} from '../components/Modals';
+
+
 const data = {
   sessions: [
     {
@@ -54,25 +59,28 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const classes = useDashboardStyles();
 
-  useEffect(async ()=>{
+  
+
+  useEffect(()=>{
     setLoading(true)
     //console.log(JSON.stringify(currentUser))
     const userRef =  firestore.collection("users").doc(currentUser.uid)
-    const user = await userRef.get();
-    if (!user.exists){
-      console.log("No user tf")
-    }
-    else{
-    //console.log("Session id's")
-    //console.log(JSON.stringify(user.data().sessions))
-    let userSessions = user.data().sessions
-    userSessions.forEach((userSession)=>{
-      const temp = firestore.collection("session").doc(userSession)
-      temp.get().then((tempSession)=>{
-        setSessions(arr => [...arr , tempSession.data()]);
+    userRef.get().then((user)=>{
+      if (!user.exists){
+        console.log("No user tf")
+      }
+      else{
+      //console.log("Session id's")
+      //console.log(JSON.stringify(user.data().sessions))
+      let userSessions = user.data().sessions
+      userSessions.forEach((userSession)=>{
+        const temp = firestore.collection("session").doc(userSession)
+        temp.get().then((tempSession)=>{
+          setSessions(arr => [...arr , tempSession.data()]);
+        })
       })
-    })
-    }
+      }
+    });
     setLoading(false)
   },[])
     
@@ -98,19 +106,22 @@ const Dashboard = () => {
               <Grid xs={6}>
                 <Typography>What's on your mind today?</Typography>
                 <Grid container spacing={4} style={{marginTop:8}}>
-					{
-						data.actions.map(
-							action => <Grid item>
-							<ActionCard {...action} />
-						  </Grid>
-						)
-					}
+                        {
+                          data.actions.map(
+                            action => <Grid item>
+                            <ActionCard {...action} />
+                            </Grid>
+                          )
+                        }
                 </Grid>
+               
               </Grid>
             </Grid>
           </Grid>
         </Grid>
+        
       </NavLayout>
+      
     </>
   );
 };
