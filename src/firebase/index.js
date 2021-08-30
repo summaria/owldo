@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
-import { auth, googleProvider } from "./config";
+import { auth, firestore, googleProvider } from "./config";
+import { FIRESTORE } from "../api";
 
 export const AuthContext = React.createContext();
 
@@ -20,7 +21,10 @@ export const AuthProvider = ({ children }) => {
     try {
       await auth.signInWithPopup(googleProvider).then(async (user) => {
         if (user.additionalUserInfo.isNewUser) {
-          // add api for create user here
+          // API call for adding new user
+          await FIRESTORE.createUser({
+           uid: user.user.uid
+          });
         }
       });
     } catch (e) {
