@@ -2,6 +2,7 @@
   "name": "owldo",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "homepage": "http://summaria.github.io/owldo",
   "dependencies": {
     "@material-ui/core": "^4.11.4",
