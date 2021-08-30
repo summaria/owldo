@@ -8,6 +8,7 @@ import Landing from "./pages/Landing.js";
 import Dashboard from "./pages/Dashboard.js";
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
+import Session from "./pages/Session";
 
 import { createMuiTheme } from "@material-ui/core/styles";
 import CreateSession from "./pages/CreateSession";
@@ -25,6 +26,7 @@ function App() {
     <Switch>
       <Route exact path={ROUTES.dashboard} component={Dashboard} />
       <Route exact path={ROUTES.createSession} component={CreateSession} />
+      <Route exact path={ROUTES.session} component={Session} />
       <Redirect to={ROUTES.dashboard} />
     </Switch>
   );
