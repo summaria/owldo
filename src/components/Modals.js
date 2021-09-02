@@ -4,9 +4,12 @@ import { Modal, Typography, Grid,Button, FormControlLabel,TextField} from '@mate
 import { makeStyles } from '@material-ui/core/styles';
 import { FormLabel, FormControl, FormGroup,Checkbox} from '@material-ui/core';
 import CustomButton from "../components/CustomButton";
-
+import ExtentCard from "../components/ExtentCard"
 import { useHistory } from "react-router-dom";
 import { Circle, CheckCircle } from "react-feather";
+import Mediocre from '../assets/Mediocre.png';
+import Extensive from '../assets/Extensive.png';
+import Rushed from '../assets/Rushed.png';
 
 let mcq = {
     question : "1. What approach does the research take to generate automatic questions?",
@@ -63,6 +66,16 @@ const modalStyles = makeStyles((theme)=>({
         fontFamily:"Solway",
         fontWeight:700,
     },
+    redBtn : {
+        backgroundColor: "#ff0000",
+        borderRadius: 24,
+        padding: "0.5% 2%",
+        textTransform:'none',
+        color:"#FFF",
+        "&:hover":{
+          cursor:'pointer'
+        },
+      },
     formControl:{
         marginLeft: theme.spacing(3),
         marginTop: theme.spacing(3)
@@ -119,6 +132,110 @@ export const QuestionModal = ({open,handleClose}) => {
                     </FormControl>
                 </div>
                 <CustomButton>Next ></CustomButton>
+            </div>
+        </Modal>
+    )
+}
+
+
+export const BreakModal = ({open,handleClose}) => {
+    const classes = modalStyles();
+    return (
+        <Modal
+            open={open}
+            onClose={handleClose}
+            className={classes.modalRoot}
+        >
+            <div className={classes.root} style={{height:"60%",width: '35%',}}>
+                <div className={classes.header}>
+                    <Typography className={classes.text} style={{opacity:0.6}}>
+                     Looks like you’ve been working hard for a while. Research says that you work 4x more productive if you take frequent short breaks between different sessions of learning. Go renergize yourself, get a sip of water and stretch for the next 10mins.
+                    </Typography>
+                </div>
+                <Typography className={classes.text} style={{fontSize:64}}>
+                    09:57 min
+                </Typography>
+                
+                <Button className={classes.redBtn}>No take me back</Button>
+            </div>
+        </Modal>
+    )
+}
+
+
+export const SummaryExtentModal = ({open,handleClose}) => {
+    const classes = modalStyles();
+    const extents = [
+        {
+            src : Extensive,
+            title : "Extensive Summary",
+            subtitle : "20 mins",
+            bgColor : "rgba(179, 137, 248, 0.2)",
+            brColor : "rgba(179, 137, 248, 1)",
+        },
+        {
+            src : Mediocre,
+            title : "Mediocre Summary",
+            subtitle : "12 mins",
+            bgColor : "rgba(244, 28, 119, 0.27)",
+            brColor : "rgba(244, 28, 119, 1)",
+        },
+        {
+            src : Rushed,
+            title : "Rushed Summary",
+            subtitle : "6 mins",
+            bgColor : "rgba(252, 204, 99, 0.26)",
+            brColor : "rgba(252, 204, 99, 1)",
+        }
+    ]
+    return (
+        <Modal
+            open={open}
+            onClose={handleClose}
+            className={classes.modalRoot}
+        >
+            <div className={classes.root} style={{height:"60%",width: '35%',}}>
+                <div className={classes.header}>
+                    <Typography className={classes.text} style={{opacity:0.6}}>
+                    Choose to what extend you want to summarize the document.
+                    </Typography>
+                </div>
+                <Grid container spacing={2} style={{marginTop:8,marginBottom:20,justifyContent:"center",alignItems:"center"}}>
+                        {
+                          extents.map(
+                            action => <Grid item>
+                            <ExtentCard {...action} />
+                            </Grid>
+                          )
+                        }
+                </Grid>
+                <CustomButton>Summarize</CustomButton>
+            </div>
+        </Modal>
+    )
+}
+
+
+
+
+export const ChallengeModal = ({open,handleClose}) => {
+    const classes = modalStyles();
+    return (
+        <Modal
+            open={open}
+            onClose={handleClose}
+            className={classes.modalRoot}
+        >
+            <div className={classes.root} style={{height:"60%",width: '35%',}}>
+                <div className={classes.header}>
+                    <Typography className={classes.text} style={{opacity:0.6}}>
+                    Hmm, looks like you’re losing focus pretty often. Research proves that humans are more attentive when challenged. Here’s a small challenge from our side to yours, this will help you get energized. Feel free to take a drinking break as well.
+                    </Typography>
+                </div>
+                
+                <Button className={classes.redBtn} style={{backgroundColor:"black",padding:12,paddingLeft:30,paddingRight:30,margin:20}}>Challenge Me</Button>
+                
+                <Button className={classes.redBtn}>No take me back</Button>
             </div>
         </Modal>
     )
