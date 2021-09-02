@@ -1,11 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { firestore } from "../firebase/config";
+
 import { useAuth } from "../firebase";
+import { useHistory } from 'react-router-dom'
+
 import { Grid, Typography, Card } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import SessionCard from "../components/SesssionCard";
 import NavLayout from "../Layouts/NavLayout";
 import ActionCard from "../components/ActionCard";
 import CustomButton from "../components/CustomButton";
+
+//RandomStuff - Should be removed later
+
+import {questionModal} from '../components/Modals';
+
 
 const data = {
   sessions: [
@@ -45,9 +54,37 @@ const useDashboardStyles = makeStyles(() => ({
 
 const Dashboard = () => {
   const { logout, currentUser } = useAuth();
-
-  const [sessions, setSessions] = useState(data.sessions);
+  const history = useHistory();
+  const [sessions, setSessions] = useState([]);
+  const [loading, setLoading] = useState(false);
   const classes = useDashboardStyles();
+
+  
+
+  useEffect(()=>{
+    setLoading(true)
+    //console.log(JSON.stringify(currentUser))
+    const userRef =  firestore.collection("users").doc(currentUser.uid)
+    userRef.get().then((user)=>{
+      if (!user.exists){
+        console.log("No user tf")
+      }
+      else{
+      //console.log("Session id's")
+      //console.log(JSON.stringify(user.data().sessions))
+      let userSessions = user.data().sessions
+      userSessions.forEach((userSession)=>{
+        const temp = firestore.collection("session").doc(userSession)
+        temp.get().then((tempSession)=>{
+          setSessions(arr => [...arr , tempSession.data()]);
+        })
+      })
+      }
+    });
+    setLoading(false)
+  },[])
+    
+
   return (
     <>
       <NavLayout>
@@ -61,7 +98,7 @@ const Dashboard = () => {
 					<SessionCard {...session} />
 				))}
 				<div style={{marginTop:24}}>
-				<CustomButton>
+				<CustomButton onClick={()=> history.push('/create-session')}>
 					Start a session
 				</CustomButton>
 				</div>
@@ -69,19 +106,22 @@ const Dashboard = () => {
               <Grid xs={6}>
                 <Typography>What's on your mind today?</Typography>
                 <Grid container spacing={4} style={{marginTop:8}}>
-					{
-						data.actions.map(
-							action => <Grid item>
-							<ActionCard {...action} />
-						  </Grid>
-						)
-					}
+                        {
+                          data.actions.map(
+                            action => <Grid item>
+                            <ActionCard {...action} />
+                            </Grid>
+                          )
+                        }
                 </Grid>
+               
               </Grid>
             </Grid>
           </Grid>
         </Grid>
+        
       </NavLayout>
+      
     </>
   );
 };
