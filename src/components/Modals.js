@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 
 import {
   Modal,
@@ -6,42 +6,15 @@ import {
   Grid,
   Button,
   FormControlLabel,
-  TextField,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { FormLabel, FormControl, RadioGroup, Radio } from "@material-ui/core";
+import { FormControl, RadioGroup, Radio } from "@material-ui/core";
 import CustomButton from "../components/CustomButton";
 import ExtentCard from "../components/ExtentCard";
-import { useHistory } from "react-router-dom";
 import { Circle, CheckCircle } from "react-feather";
 import Mediocre from "../assets/Mediocre.png";
 import Extensive from "../assets/Extensive.png";
 import Rushed from "../assets/Rushed.png";
-
-let mcq = {
-  question:
-    "1. What approach does the research take to generate automatic questions?",
-  options: ["Introduction", "Approach", "Description Of Methods", "Results"],
-};
-
-let questions = [
-  {
-    answer: "Top 10",
-    question: "Who are you?",
-    type: "Sub",
-  },
-  {
-    answer: "Top 0",
-    question: "What are you?",
-    type: "Sub",
-  },
-  {
-    answer: 1,
-    options: ["I am Avi", "I am dumb", "I am good", "You're awesome"],
-    question: "Who are you",
-    type: "MCQ",
-  },
-];
 
 const modalStyles = makeStyles((theme) => ({
   modalRoot: {
@@ -106,7 +79,7 @@ const modalStyles = makeStyles((theme) => ({
   },
 }));
 
-export const QuestionModal = ({ open, handleClose }) => {
+export const QuestionModal = ({ open, handleClose, questions }) => {
   const classes = modalStyles();
 
   const [activeQuestion, setActiveQuestion] = useState(0);
@@ -122,7 +95,8 @@ export const QuestionModal = ({ open, handleClose }) => {
     setCollapseAnswer(true);
   };
 
-  let question = questions[activeQuestion];
+  let question =
+    questions && questions?.length != 0 && questions[activeQuestion];
   return (
     <Modal open={open} onClose={handleClose} className={classes.modalRoot}>
       <div className={classes.root} style={{ height: "60%", width: "35%" }}>
@@ -131,12 +105,12 @@ export const QuestionModal = ({ open, handleClose }) => {
             Answer some of these questions based on what you just read
           </Typography>
         </div>
-        <Typography className={classes.text}>{question.question}</Typography>
+        <Typography className={classes.text}>{question?.question}</Typography>
         <div className={classes.content}>
-          {question.type == "MCQ" ? (
+          {question?.type == "MCQ" ? (
             <FormControl component="fieldset" className={classes.formControl}>
               <RadioGroup>
-                {question.options.map((option, idx) => (
+                {question?.options?.map((option, idx) => (
                   <FormControlLabel
                     key={idx}
                     control={
@@ -146,12 +120,12 @@ export const QuestionModal = ({ open, handleClose }) => {
                         value={idx}
                         name={option}
                         checked={
-                          selectedOption == idx && idx == question.answer
+                          selectedOption == idx && idx == question?.answer
                         }
                         style={{
                           color:
                             selectedOption == idx
-                              ? idx == question.answer
+                              ? idx == question?.answer
                                 ? "#00bfa6"
                                 : "red"
                               : "#000",
@@ -165,7 +139,7 @@ export const QuestionModal = ({ open, handleClose }) => {
                         style={{
                           color:
                             selectedOption == idx
-                              ? idx == question.answer
+                              ? idx == question?.answer
                                 ? "#00bfa6"
                                 : "red"
                               : "#000",
@@ -195,7 +169,7 @@ export const QuestionModal = ({ open, handleClose }) => {
                   Show answer
                 </CustomButton>
               ) : (
-                <span style={{ color: "#00bfa6" }}>{question.answer}</span>
+                <span style={{ color: "#00bfa6" }}>{question?.answer}</span>
               )}
             </div>
           )}
@@ -220,7 +194,7 @@ export const QuestionModal = ({ open, handleClose }) => {
               reset();
               setActiveQuestion(activeQuestion + 1);
             }}
-            disabled={activeQuestion === questions.length - 1}
+            disabled={questions && activeQuestion === questions?.length - 1}
           >
             Next {">"}
           </CustomButton>

@@ -8,6 +8,8 @@ import { Grid, Typography } from "@material-ui/core";
 import { Clock } from "react-feather";
 import CustomButton from "../components/CustomButton";
 import { FIRESTORE } from "../api";
+import { QuestionModal } from "../components/Modals";
+
 const useStyles = makeStyles(() => ({
   navbar: {
     backgroundColor: "#00BFA6",
@@ -78,11 +80,18 @@ const Session = (props) => {
     //console.log(session.title)
   }, []);
 
-  const handleQuestionPopup = () => {};
+  const handleQuestionPopup = () => {
+    setModal(1);
+  };
 
   return (
     <>
       <NavLayout>
+        <QuestionModal
+          handleClose={() => setModal(0)}
+          open={modal === 1}
+          questions={session.questions}
+        />
         <Grid container className={classes.navbar}>
           <Grid item style={{ flexGrow: 1 }}>
             <Typography variant="h5" style={{ color: "white" }}>
