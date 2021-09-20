@@ -1,4 +1,7 @@
-import React from "react";
+import React, {useEffect,useState} from "react";
+import { firestore } from "../firebase/config";
+
+import { useLocation } from "react-router-dom";
 import NavLayout from "../Layouts/NavLayout";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Typography } from "@material-ui/core";
@@ -27,15 +30,32 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Session = () => {
+
+const Session = (props) => {
   const classes = useStyles();
+  const location = useLocation();
+  const [session , setSession] = useState({})
+  const sessionID = window.location.href.split('/').pop()
+  //console.log(sessionID)
+
+  const getSession = async () => {
+    const sessRef = firestore.collection("session").doc(sessionID)
+    const s = await sessRef.get()
+    setSession(s.data())
+  }
+
+  useEffect(()=>{
+    getSession();
+    //console.log(session.title)
+  },[])
+
   return (
     <>
       <NavLayout>
         <Grid container className={classes.navbar}>
           <Grid item style={{ flexGrow: 1 }}>
             <Typography variant="h5" style={{ color: "white" }}>
-              Title
+              {session.title}
             </Typography>
           </Grid>
           <Grid item className={classes.timer}>
@@ -45,7 +65,7 @@ const Session = () => {
         <Grid container style={{ height: "100%" }}>
           <Grid container item xs={9} style={{ height: "100%" }}>
             <iframe
-              src="https://firebasestorage.googleapis.com/v0/b/owldo-96e1b.appspot.com/o/Photosynthesis.pdf?alt=media&token=5d690373-ead8-4988-af63-73c2548607de"
+              src={session.fileURL}
               style={{ height: "100%", width: "100%" }}
               zoom="80%"
             />

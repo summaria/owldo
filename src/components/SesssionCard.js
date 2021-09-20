@@ -1,10 +1,13 @@
 import React from 'react';
+
+import { useHistory } from 'react-router-dom'
+
 import { makeStyles} from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import { ChevronRight } from 'react-feather';
+
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -38,8 +41,9 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-export default function SessionCard({title,date}) {
+export default function SessionCard({title,fileURL,id}) {
   const classes = useStyles();
+  const history = useHistory();
   return (
     <Card className={classes.root} elevation={0}>
       <img
@@ -52,12 +56,18 @@ export default function SessionCard({title,date}) {
             {title}
           </Typography>
           <Typography style={{fontSize:14}} color="textSecondary">
-            {date}
+            23rd September
           </Typography>
         </CardContent>
       </div>
       <div className={classes.icon}>
-        <ChevronRight height="40px" width="35"  opacity="0.6"/>
+        <ChevronRight height="40px" width="35"  opacity="0.6" onClick={()=>{
+          history.push({
+            pathname:`/session/${id}`,
+            state:{id:id,fileURL:fileURL,title:title}
+          })
+        }}
+          />
       </div>
     </Card>
   );

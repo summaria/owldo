@@ -11,11 +11,6 @@ import NavLayout from "../Layouts/NavLayout";
 import ActionCard from "../components/ActionCard";
 import CustomButton from "../components/CustomButton";
 
-//RandomStuff - Should be removed later
-
-import {questionModal} from '../components/Modals';
-
-
 const data = {
   sessions: [
     {
@@ -59,19 +54,14 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const classes = useDashboardStyles();
 
-  
-
-  useEffect(()=>{
-    setLoading(true)
-    //console.log(JSON.stringify(currentUser))
+  const getSessions = async () => {
     const userRef =  firestore.collection("users").doc(currentUser.uid)
     userRef.get().then((user)=>{
       if (!user.exists){
         console.log("No user tf")
       }
       else{
-      //console.log("Session id's")
-      //console.log(JSON.stringify(user.data().sessions))
+
       let userSessions = user.data().sessions
       userSessions.forEach((userSession)=>{
         const temp = firestore.collection("session").doc(userSession)
@@ -81,11 +71,17 @@ const Dashboard = () => {
       })
       }
     });
+  }
+
+  useEffect(()=>{
+    setLoading(true)
+    getSessions();
     setLoading(false)
   },[])
     
 
   return (
+    loading?<Typography style={{fontSize:30,textAlign:"center"}}>Loading...</Typography>:
     <>
       <NavLayout>
         <Grid container style={{ margin: "0% 2% 0% 2%" }}>
