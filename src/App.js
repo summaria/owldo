@@ -9,7 +9,7 @@ import Dashboard from "./pages/Dashboard.js";
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import Session from "./pages/Session";
-import Unnecessary  from "./pages/AvsWillKillMe";
+import Unnecessary from "./pages/customModals";
 
 import { createMuiTheme } from "@material-ui/core/styles";
 import CreateSession from "./pages/CreateSession";

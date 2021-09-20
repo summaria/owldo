@@ -1,4 +1,4 @@
-import React, {useEffect,useState} from "react";
+import React, { useEffect, useState } from "react";
 import { firestore } from "../firebase/config";
 
 import { useLocation } from "react-router-dom";
@@ -7,6 +7,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Typography } from "@material-ui/core";
 import { Clock } from "react-feather";
 import CustomButton from "../components/CustomButton";
+import { FIRESTORE } from "../api";
+import { QuestionModal, SummaryExtentModal } from "../components/Modals";
+
 const useStyles = makeStyles(() => ({
   navbar: {
     backgroundColor: "#00BFA6",
@@ -30,28 +33,69 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-
 const Session = (props) => {
   const classes = useStyles();
   const location = useLocation();
-  const [session , setSession] = useState({})
-  const sessionID = window.location.href.split('/').pop()
+  const [setupLoading, setSetupLoading] = useState(true);
+  const [session, setSession] = useState({});
+  const sessionID = window.location.href.split("/").pop();
   //console.log(sessionID)
 
-  const getSession = async () => {
-    const sessRef = firestore.collection("session").doc(sessionID)
-    const s = await sessRef.get()
-    setSession(s.data())
-  }
+  const [modal, setModal] = React.useState(0);
+  const handleClose = () => setModal(0);
 
-  useEffect(()=>{
+  const handleQuestionModal = (event) => {
+    setModal(1);
+  };
+
+  const handleBreakModal = (event) => {
+    setModal(2);
+  };
+
+  const handleSummaryExtentModal = (event) => {
+    setModal(3);
+  };
+
+  const handleChallengeModal = (event) => {
+    setModal(4);
+  };
+
+  const getSession = async () => {
+    const sessRef = firestore.collection("session").doc(sessionID);
+    const s = await sessRef.get();
+    let sessionData = s.data();
+    setSession(sessionData);
+    if (!sessionData?.setup) {
+      await FIRESTORE.setupSession({
+        fileURL: sessionData?.fileURL,
+        sessionId: sessionID,
+      });
+      setSession((await sessRef.get()).data());
+    }
+    setSetupLoading(false);
+  };
+
+  useEffect(() => {
     getSession();
     //console.log(session.title)
-  },[])
+  }, []);
+
+  const handleQuestionPopup = () => {
+    setModal(1);
+  };
 
   return (
     <>
       <NavLayout>
+        <QuestionModal
+          handleClose={() => setModal(0)}
+          open={modal === 1}
+          questions={session.questions}
+        />
+        <SummaryExtentModal
+          handleClose={() => setModal(0)}
+          open={modal === 2}
+        />
         <Grid container className={classes.navbar}>
           <Grid item style={{ flexGrow: 1 }}>
             <Typography variant="h5" style={{ color: "white" }}>
@@ -71,49 +115,57 @@ const Session = (props) => {
             />
           </Grid>
           <Grid container className={classes.sidebar} item xs={3}>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                width: "100%",
-                justifyContent: "center",
-              }}
-            >
-              <CustomButton
-                styles={{
-                  backgroundColor: "black",
-                  color: "white",
-                  padding: "2% 8%",
-                }}
-              >
-                Generate a summary
-              </CustomButton>
-              <CustomButton
-                styles={{
-                  backgroundColor: "white",
-                  color: "black",
-                  padding: "2% 8%",
-                  marginTop: 12,
-                }}
-              >
-                Test me
-              </CustomButton>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                width: "100%",
-                alignItems: "center",
-                justifyContent: "center",
-                marginBottom: 8,
-              }}
-            >
-              <img
-                src="https://circuits4you.com/wp-content/uploads/2019/01/line_chart_ESP8266.png"
-                style={{ width: "90%", height: "30%", borderRadius: 8 }}
-              />
-            </div>
+            {setupLoading ? (
+              <p>Loading...</p>
+            ) : (
+              <>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    width: "100%",
+                    justifyContent: "center",
+                  }}
+                >
+                  <CustomButton
+                    onClick={() => setModal(2)}
+                    styles={{
+                      backgroundColor: "black",
+                      color: "white",
+                      padding: "2% 8%",
+                    }}
+                  >
+                    Generate a summary
+                  </CustomButton>
+                  <CustomButton
+                    onClick={handleQuestionPopup}
+                    styles={{
+                      backgroundColor: "white",
+                      color: "black",
+                      padding: "2% 8%",
+                      marginTop: 12,
+                    }}
+                  >
+                    Test me
+                  </CustomButton>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    width: "100%",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: 8,
+                  }}
+                >
+                  <img
+                    src="https://circuits4you.com/wp-content/uploads/2019/01/line_chart_ESP8266.png"
+                    style={{ width: "90%", height: "30%", borderRadius: 8 }}
+                  />
+                </div>
+              </>
+            )}
           </Grid>
         </Grid>
       </NavLayout>

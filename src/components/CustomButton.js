@@ -17,7 +17,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const CustomButton = ({ onClick = () => {}, children, styles }) => {
+const CustomButton = ({ onClick = () => {}, children, styles, ...rest }) => {
   const classes = useStyles();
   return (
     <Button
@@ -25,6 +25,7 @@ const CustomButton = ({ onClick = () => {}, children, styles }) => {
       className={classes.btn}
       onClick={onClick}
       style={styles}
+      {...rest}
     >
       {children}
     </Button>
