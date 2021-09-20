@@ -39,6 +39,25 @@ const Session = (props) => {
   const sessionID = window.location.href.split("/").pop();
   //console.log(sessionID)
 
+  const [modal, setModal] = React.useState(0);
+  const handleClose = () => setModal(0);
+
+  const handleQuestionModal = (event) => {
+    setModal(1);
+  };
+
+  const handleBreakModal = (event) => {
+    setModal(2);
+  };
+
+  const handleSummaryExtentModal = (event) => {
+    setModal(3);
+  };
+
+  const handleChallengeModal = (event) => {
+    setModal(4);
+  };
+
   const getSession = async () => {
     const sessRef = firestore.collection("session").doc(sessionID);
     const s = await sessRef.get();
@@ -58,6 +77,8 @@ const Session = (props) => {
     getSession();
     //console.log(session.title)
   }, []);
+
+  const handleQuestionPopup = () => {};
 
   return (
     <>
@@ -104,6 +125,7 @@ const Session = (props) => {
                     Generate a summary
                   </CustomButton>
                   <CustomButton
+                    onClick={handleQuestionPopup}
                     styles={{
                       backgroundColor: "white",
                       color: "black",
