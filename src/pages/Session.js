@@ -1,4 +1,4 @@
-import React, {useEffect,useState} from "react";
+import React, { useEffect, useState } from "react";
 import { firestore } from "../firebase/config";
 
 import { useLocation } from "react-router-dom";
@@ -7,6 +7,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Typography } from "@material-ui/core";
 import { Clock } from "react-feather";
 import CustomButton from "../components/CustomButton";
+import { FIRESTORE } from "../api";
 const useStyles = makeStyles(() => ({
   navbar: {
     backgroundColor: "#00BFA6",
@@ -30,24 +31,33 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-
 const Session = (props) => {
   const classes = useStyles();
   const location = useLocation();
-  const [session , setSession] = useState({})
-  const sessionID = window.location.href.split('/').pop()
+  const [setupLoading, setSetupLoading] = useState(true);
+  const [session, setSession] = useState({});
+  const sessionID = window.location.href.split("/").pop();
   //console.log(sessionID)
 
   const getSession = async () => {
-    const sessRef = firestore.collection("session").doc(sessionID)
-    const s = await sessRef.get()
-    setSession(s.data())
-  }
+    const sessRef = firestore.collection("session").doc(sessionID);
+    const s = await sessRef.get();
+    let sessionData = s.data();
+    setSession(sessionData);
+    if (!sessionData?.setup) {
+      await FIRESTORE.setupSession({
+        fileURL: sessionData?.fileURL,
+        sessionId: sessionID,
+      });
+      setSession((await sessRef.get()).data());
+    }
+    setSetupLoading(false);
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     getSession();
     //console.log(session.title)
-  },[])
+  }, []);
 
   return (
     <>
@@ -71,49 +81,55 @@ const Session = (props) => {
             />
           </Grid>
           <Grid container className={classes.sidebar} item xs={3}>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                width: "100%",
-                justifyContent: "center",
-              }}
-            >
-              <CustomButton
-                styles={{
-                  backgroundColor: "black",
-                  color: "white",
-                  padding: "2% 8%",
-                }}
-              >
-                Generate a summary
-              </CustomButton>
-              <CustomButton
-                styles={{
-                  backgroundColor: "white",
-                  color: "black",
-                  padding: "2% 8%",
-                  marginTop: 12,
-                }}
-              >
-                Test me
-              </CustomButton>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                width: "100%",
-                alignItems: "center",
-                justifyContent: "center",
-                marginBottom: 8,
-              }}
-            >
-              <img
-                src="https://circuits4you.com/wp-content/uploads/2019/01/line_chart_ESP8266.png"
-                style={{ width: "90%", height: "30%", borderRadius: 8 }}
-              />
-            </div>
+            {setupLoading ? (
+              <p>Loading...</p>
+            ) : (
+              <>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    width: "100%",
+                    justifyContent: "center",
+                  }}
+                >
+                  <CustomButton
+                    styles={{
+                      backgroundColor: "black",
+                      color: "white",
+                      padding: "2% 8%",
+                    }}
+                  >
+                    Generate a summary
+                  </CustomButton>
+                  <CustomButton
+                    styles={{
+                      backgroundColor: "white",
+                      color: "black",
+                      padding: "2% 8%",
+                      marginTop: 12,
+                    }}
+                  >
+                    Test me
+                  </CustomButton>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    width: "100%",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: 8,
+                  }}
+                >
+                  <img
+                    src="https://circuits4you.com/wp-content/uploads/2019/01/line_chart_ESP8266.png"
+                    style={{ width: "90%", height: "30%", borderRadius: 8 }}
+                  />
+                </div>
+              </>
+            )}
           </Grid>
         </Grid>
       </NavLayout>
