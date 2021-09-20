@@ -254,9 +254,9 @@ export const SummaryExtentModal = ({ open, handleClose }) => {
   ];
   return (
     <Modal open={open} onClose={handleClose} className={classes.modalRoot}>
-      <div className={classes.root} style={{ height: "60%", width: "35%" }}>
+      <div className={classes.root} style={{ height: "60%" }}>
         <div className={classes.header}>
-          <Typography className={classes.text} style={{ opacity: 0.6 }}>
+          <Typography className={classes.text}>
             Choose to what extend you want to summarize the document.
           </Typography>
         </div>

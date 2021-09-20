@@ -8,7 +8,7 @@ import { Grid, Typography } from "@material-ui/core";
 import { Clock } from "react-feather";
 import CustomButton from "../components/CustomButton";
 import { FIRESTORE } from "../api";
-import { QuestionModal } from "../components/Modals";
+import { QuestionModal, SummaryExtentModal } from "../components/Modals";
 
 const useStyles = makeStyles(() => ({
   navbar: {
@@ -92,6 +92,10 @@ const Session = (props) => {
           open={modal === 1}
           questions={session.questions}
         />
+        <SummaryExtentModal
+          handleClose={() => setModal(0)}
+          open={modal === 2}
+        />
         <Grid container className={classes.navbar}>
           <Grid item style={{ flexGrow: 1 }}>
             <Typography variant="h5" style={{ color: "white" }}>
@@ -125,6 +129,7 @@ const Session = (props) => {
                   }}
                 >
                   <CustomButton
+                    onClick={() => setModal(2)}
                     styles={{
                       backgroundColor: "black",
                       color: "white",
