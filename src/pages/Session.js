@@ -9,6 +9,7 @@ import { Clock } from "react-feather";
 import CustomButton from "../components/CustomButton";
 import { FIRESTORE } from "../api";
 import { QuestionModal, SummaryExtentModal } from "../components/Modals";
+import { WebGazeProvider, useWebGazer } from "../webgazer";
 
 const useStyles = makeStyles(() => ({
   navbar: {
@@ -173,4 +174,12 @@ const Session = (props) => {
   );
 };
 
-export default Session;
+const WebGazerSession = () => {
+  return (
+    <WebGazeProvider>
+      <Session />
+    </WebGazeProvider>
+  );
+};
+
+export default WebGazerSession;
