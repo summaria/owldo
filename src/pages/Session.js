@@ -8,7 +8,7 @@ import { Grid, Typography } from "@material-ui/core";
 import { Clock } from "react-feather";
 import CustomButton from "../components/CustomButton";
 import { FIRESTORE } from "../api";
-import { QuestionModal, SummaryExtentModal } from "../components/Modals";
+import { QuestionModal, SummaryExtentModal,CallibarationModal } from "../components/Modals";
 import { WebGazeProvider, useWebGazer } from "../webgazer";
 import { CanvasJSChart } from "canvasjs-react-charts";
 const useStyles = makeStyles(() => ({
@@ -43,7 +43,7 @@ const Session = (props) => {
 
   //console.log(sessionID)
 
-  const [modal, setModal] = React.useState(0);
+  const [modal, setModal] = React.useState(5);
   const handleClose = () => setModal(0);
 
   const handleQuestionModal = (event) => {
@@ -105,6 +105,10 @@ const Session = (props) => {
         <SummaryExtentModal
           handleClose={() => setModal(0)}
           open={modal === 2}
+        />
+        <CallibarationModal
+          handleClose={() => setModal(0)}
+          open={modal === 5}
         />
         <Grid container className={classes.navbar}>
           <Grid item style={{ flexGrow: 1 }}>

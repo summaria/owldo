@@ -79,7 +79,9 @@ const modalStyles = makeStyles((theme) => ({
   },
   circle: {
     padding: 20,
-    margin: 40,
+    marginLeft: 150,
+    marginRight: 150,
+    marginTop:10,
     display: "inline-block",
     borderRadius: "50%",
     width: 50,
@@ -345,15 +347,7 @@ export const CallibarationModal = ({ open, handleClose }) => {
   ];
   return (
     <Modal open={open} onClose={handleClose} className={classes.modalRoot}>
-      <div className={classes.root} style={{ height: "90%", width: "85%" }}>
-        <div className={classes.header}>
-          <Typography className={classes.text} style={{ opacity: 0.6 }}>
-            Help us callibarate the attention span tracker. Click on the
-            colorful balls in order while focussing your eyes on the ball. This
-            will help the tracker adjust to your eye movements and your
-            surrounding environment settings.
-          </Typography>
-        </div>
+      <div className={classes.root} style={{ height: "100%", width: "100%" }}>
         <Grid
           container
           spacing={2}
@@ -364,7 +358,8 @@ export const CallibarationModal = ({ open, handleClose }) => {
             alignItems: "center",
           }}
         >
-          {colors.map((color, idx) => (
+          {colors.slice(0,14).map((color, idx) => (
+            <>
             <div
               className={classes.circle}
               style={{
@@ -393,8 +388,33 @@ export const CallibarationModal = ({ open, handleClose }) => {
                 {idx}
               </Typography>
             </div>
+            {idx==3?<div style={{width:"100%"}}></div>:idx==4?<div style={{width:"100%"}}></div>:idx==5?(
+                      <><Typography className={classes.text} style={{ opacity: 0.6, width:"50%",margin:"0 auto",textAlign:"center",marginTop:10 }}>
+                          Help us callibarate the attention span tracker. Click on the
+                          colorful balls in order while focussing your eyes on the ball. This
+                          will help the tracker adjust to your eye movements and your
+                          surrounding environment settings.
+                          <br/>
+                          <Button className={classes.redBtn} style={{
+                          backgroundColor: "black",
+                          padding: 12,
+                          paddingLeft: 30,
+                          paddingRight: 30,
+                          margin: 20,
+                        }}
+                        onClick={handleClose}
+                        >Click on this when all balls disappear!</Button>
+                        </Typography>
+                        
+                       </>
+                  )
+          :idx==9?<div style={{width:"100%"}}></div>:<></>
+          }
+            </>
           ))}
+        
         </Grid>
+        
       </div>
     </Modal>
   );
