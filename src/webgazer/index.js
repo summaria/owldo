@@ -71,7 +71,8 @@ export const WebGazeProvider = ({ children }) => {
         attention = focus / (focus + unfocus);
         updateChart(attention);
       } catch (err) {
-        console.log("ERRRROR", err);
+        unfocus += 1;
+        updateChart(focus / (focus + unfocus));
       }
     }, 2000);
   };

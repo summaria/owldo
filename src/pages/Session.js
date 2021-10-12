@@ -92,7 +92,6 @@ const Session = (props) => {
   let { datapoints } = useWebGazer();
   const [chart, setChart] = useState(null);
   useEffect(() => {
-    console.log("Rendering", datapoints);
     if (chart) chart.render();
   }, [datapoints]);
   return (
@@ -191,7 +190,7 @@ const Session = (props) => {
                       data: [
                         {
                           type: "splineArea",
-                          color: "#9966CC",
+                          color: "#00BFA6",
                           markerSize: 5,
                           dataPoints: datapoints,
                         },

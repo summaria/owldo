@@ -78,8 +78,8 @@ const modalStyles = makeStyles((theme) => ({
     fontWeight: 700,
   },
   circle: {
-    padding: 10,
-    margin: 20,
+    padding: 20,
+    margin: 40,
     display: "inline-block",
     borderRadius: "50%",
     width: 50,
@@ -330,14 +330,22 @@ export const CallibarationModal = ({ open, handleClose }) => {
     "#E94F37",
     "#1C89BF",
     "#A1D363",
+    "#C70039",
     "#85FFC7",
     "#297373",
     "#FF8552",
-    "#A40E4C",
+    "#36908e ",
+    "#FFC300 ",
+    "#449036",
+    "#581845",
+    "#337dff ",
+    "#838720 ",
+    "#873690",
+    "#AF8553",
   ];
   return (
     <Modal open={open} onClose={handleClose} className={classes.modalRoot}>
-      <div className={classes.root} style={{ height: "60%", width: "35%" }}>
+      <div className={classes.root} style={{ height: "90%", width: "85%" }}>
         <div className={classes.header}>
           <Typography className={classes.text} style={{ opacity: 0.6 }}>
             Help us callibarate the attention span tracker. Click on the
@@ -359,17 +367,28 @@ export const CallibarationModal = ({ open, handleClose }) => {
           {colors.map((color, idx) => (
             <div
               className={classes.circle}
-              style={{ backgroundColor: color, textAlign: "center" }}
-              id={idx}
+              style={{
+                backgroundColor: color,
+                textAlign: "center",
+                cursor: "pointer",
+              }}
+              id={`ball-${idx}`}
               onClick={(event) => {
-                for (let i = 0; i < 10; i++) {
-                  event.target.style.opacity = event.target.style.opacity - 0.1;
-                }
+                event.target.style.opacity =
+                  window
+                    .getComputedStyle(event.target)
+                    .getPropertyValue("opacity") - 0.2;
               }}
             >
               <Typography
                 className={classes.text}
-                style={{ fontSize: 20, color: "white" }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  let divx = document.getElementById(`ball-${idx}`);
+                  divx.click();
+                }}
+                style={{ fontSize: 20, padding: 0, color: "white" }}
               >
                 {idx}
               </Typography>
