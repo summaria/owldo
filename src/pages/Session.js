@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { firestore } from "../firebase/config";
 
 import { useLocation } from "react-router-dom";
@@ -10,7 +10,7 @@ import CustomButton from "../components/CustomButton";
 import { FIRESTORE } from "../api";
 import { QuestionModal, SummaryExtentModal } from "../components/Modals";
 import { WebGazeProvider, useWebGazer } from "../webgazer";
-
+import { CanvasJSChart } from "canvasjs-react-charts";
 const useStyles = makeStyles(() => ({
   navbar: {
     backgroundColor: "#00BFA6",
@@ -40,6 +40,7 @@ const Session = (props) => {
   const [setupLoading, setSetupLoading] = useState(true);
   const [session, setSession] = useState({});
   const sessionID = window.location.href.split("/").pop();
+
   //console.log(sessionID)
 
   const [modal, setModal] = React.useState(0);
@@ -59,6 +60,10 @@ const Session = (props) => {
 
   const handleChallengeModal = (event) => {
     setModal(4);
+  };
+
+  const handleCallibarationModel = (event) => {
+    setModal(5);
   };
 
   const getSession = async () => {
@@ -84,7 +89,12 @@ const Session = (props) => {
   const handleQuestionPopup = () => {
     setModal(1);
   };
-
+  let { datapoints } = useWebGazer();
+  const [chart, setChart] = useState(null);
+  useEffect(() => {
+    console.log("Rendering", datapoints);
+    if (chart) chart.render();
+  }, [datapoints]);
   return (
     <>
       <NavLayout>
@@ -108,7 +118,13 @@ const Session = (props) => {
           </Grid>
         </Grid>
         <Grid container style={{ height: "100%" }}>
-          <Grid container item xs={9} style={{ height: "100%" }}>
+          <Grid
+            container
+            id="attention-focus-area"
+            item
+            xs={9}
+            style={{ height: "100%" }}
+          >
             <iframe
               src={session.fileURL}
               style={{ height: "100%", width: "100%" }}
@@ -160,9 +176,27 @@ const Session = (props) => {
                     marginBottom: 8,
                   }}
                 >
-                  <img
-                    src="https://circuits4you.com/wp-content/uploads/2019/01/line_chart_ESP8266.png"
-                    style={{ width: "90%", height: "30%", borderRadius: 8 }}
+                  <CanvasJSChart
+                    onRef={(ref) => setChart(ref)}
+                    options={{
+                      animationEnabled: true,
+                      axisY: {
+                        title: "Attention",
+                        gridThickness: 0,
+                      },
+                      axisX: {
+                        title: "Time",
+                      },
+                      title: {},
+                      data: [
+                        {
+                          type: "splineArea",
+                          color: "#9966CC",
+                          markerSize: 5,
+                          dataPoints: datapoints,
+                        },
+                      ],
+                    }}
                   />
                 </div>
               </>

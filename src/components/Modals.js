@@ -77,6 +77,14 @@ const modalStyles = makeStyles((theme) => ({
     fontFamily: "Solway",
     fontWeight: 700,
   },
+  circle: {
+    padding: 10,
+    margin: 20,
+    display: "inline-block",
+    borderRadius: "50%",
+    width: 50,
+    height: 50,
+  },
 }));
 
 export const QuestionModal = ({ open, handleClose, questions }) => {
@@ -310,6 +318,64 @@ export const ChallengeModal = ({ open, handleClose }) => {
         </Button>
 
         <Button className={classes.redBtn}>No take me back</Button>
+      </div>
+    </Modal>
+  );
+};
+
+export const CallibarationModal = ({ open, handleClose }) => {
+  const classes = modalStyles();
+  var colors = [
+    "#393E41",
+    "#E94F37",
+    "#1C89BF",
+    "#A1D363",
+    "#85FFC7",
+    "#297373",
+    "#FF8552",
+    "#A40E4C",
+  ];
+  return (
+    <Modal open={open} onClose={handleClose} className={classes.modalRoot}>
+      <div className={classes.root} style={{ height: "60%", width: "35%" }}>
+        <div className={classes.header}>
+          <Typography className={classes.text} style={{ opacity: 0.6 }}>
+            Help us callibarate the attention span tracker. Click on the
+            colorful balls in order while focussing your eyes on the ball. This
+            will help the tracker adjust to your eye movements and your
+            surrounding environment settings.
+          </Typography>
+        </div>
+        <Grid
+          container
+          spacing={2}
+          style={{
+            marginTop: 8,
+            marginBottom: 20,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {colors.map((color, idx) => (
+            <div
+              className={classes.circle}
+              style={{ backgroundColor: color, textAlign: "center" }}
+              id={idx}
+              onClick={(event) => {
+                for (let i = 0; i < 10; i++) {
+                  event.target.style.opacity = event.target.style.opacity - 0.1;
+                }
+              }}
+            >
+              <Typography
+                className={classes.text}
+                style={{ fontSize: 20, color: "white" }}
+              >
+                {idx}
+              </Typography>
+            </div>
+          ))}
+        </Grid>
       </div>
     </Modal>
   );
