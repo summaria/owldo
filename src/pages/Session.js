@@ -94,6 +94,7 @@ const Session = (props) => {
 
   const handleQuestionPopup = () => {
     setModal(1);
+    webgazer.pause();
   };
   const [chart, setChart] = useState(null);
   useEffect(() => {
@@ -106,12 +107,18 @@ const Session = (props) => {
     <>
       <NavLayout>
         <QuestionModal
-          handleClose={() => setModal(0)}
+          handleClose={() => {
+            setModal(0);
+            webgazer.resume();
+          }}
           open={modal === 1}
           questions={session.questions}
         />
         <SummaryExtentModal
-          handleClose={() => setModal(0)}
+          handleClose={() => {
+            setModal(0);
+            //webgazer.resume();
+          }}
           open={modal === 2}
         />
         <BreakModal
@@ -167,7 +174,10 @@ const Session = (props) => {
                   }}
                 >
                   <CustomButton
-                    onClick={() => setModal(2)}
+                    onClick={() => {
+                      webgazer.pause();
+                      setModal(2);
+                    }}
                     styles={{
                       backgroundColor: "black",
                       color: "white",
