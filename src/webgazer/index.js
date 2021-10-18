@@ -16,8 +16,10 @@ export const WebGazeProvider = ({ children }) => {
   const [attLoading, setLoading] = useState(true);
   const [attention, setAttention] = useState(0.0);
   const [count, setCount] = useState(0);
+  const [ready, setReady] = useState(0);
   let focus = 0,
     unfocus = 0;
+  let focuspoints = [];
 
   const getCoords = async () => {
     var prediction = await webgazer.getCurrentPrediction();
@@ -32,16 +34,17 @@ export const WebGazeProvider = ({ children }) => {
   const [datapoints, setDatapoints] = useState([]);
   let dps = [];
   let countx = 0;
-  const updateChart = (attention) => {
+  const updateChart = () => {
     countx += 1;
+    let attention = focuspoints.reduce((a, b) => a + b, 0) / focuspoints.length;
     dps.push({
       x: countx,
       y: attention,
     });
     if (dps.length > 20) {
+      focuspoints.shift();
       dps.shift();
     }
-    console.log("Updating chart", dps);
     setAttention(attention);
     setDatapoints(dps);
     setCount(countx);
@@ -57,22 +60,26 @@ export const WebGazeProvider = ({ children }) => {
       })
       ?.begin();
     webgazer.showVideoPreview(false);
+
+    webgazer.applyKalmanFilter(true);
     let div = document.getElementById("attention-focus-area");
     setInterval(async () => {
       try {
         let [x, y] = await getCoords();
         let { top, left, right, bottom } = div.getBoundingClientRect();
         if (x >= left && x <= right && y <= bottom && y >= top) {
-          focus += 1;
+          //focus += 1;
+          focuspoints.push(1);
         } else {
-          unfocus += 1;
+          //unfocus += 1;
+          focuspoints.push(0);
         }
-        let attention = 0.0;
-        attention = focus / (focus + unfocus);
-        updateChart(attention);
+        updateChart();
       } catch (err) {
-        unfocus += 1;
-        updateChart(focus / (focus + unfocus));
+        console.log("Error:", err);
+        // unfocus += 1;
+        focuspoints.push(0);
+        updateChart();
       }
     }, 2000);
   };

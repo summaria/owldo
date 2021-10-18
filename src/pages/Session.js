@@ -8,7 +8,11 @@ import { Grid, Typography } from "@material-ui/core";
 import { Clock } from "react-feather";
 import CustomButton from "../components/CustomButton";
 import { FIRESTORE } from "../api";
-import { QuestionModal, SummaryExtentModal,CallibarationModal } from "../components/Modals";
+import {
+  QuestionModal,
+  SummaryExtentModal,
+  CallibarationModal,
+} from "../components/Modals";
 import { WebGazeProvider, useWebGazer } from "../webgazer";
 import { CanvasJSChart } from "canvasjs-react-charts";
 const useStyles = makeStyles(() => ({
