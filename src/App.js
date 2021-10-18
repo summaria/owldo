@@ -3,7 +3,7 @@ import ROUTES from "./routes";
 import React from "react";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { useAuth, AuthProvider } from "./firebase";
-
+import "./App.css";
 import Landing from "./pages/Landing.js";
 import Dashboard from "./pages/Dashboard.js";
 import Signin from "./pages/Signin";

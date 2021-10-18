@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { firestore } from "../firebase/config";
 
 import { useLocation } from "react-router-dom";
@@ -8,8 +8,14 @@ import { Grid, Typography } from "@material-ui/core";
 import { Clock } from "react-feather";
 import CustomButton from "../components/CustomButton";
 import { FIRESTORE } from "../api";
-import { QuestionModal, SummaryExtentModal } from "../components/Modals";
-
+import {
+  QuestionModal,
+  SummaryExtentModal,
+  CallibarationModal,
+  BreakModal,
+} from "../components/Modals";
+import { WebGazeProvider, useWebGazer } from "../webgazer";
+import { CanvasJSChart } from "canvasjs-react-charts";
 const useStyles = makeStyles(() => ({
   navbar: {
     backgroundColor: "#00BFA6",
@@ -39,9 +45,9 @@ const Session = (props) => {
   const [setupLoading, setSetupLoading] = useState(true);
   const [session, setSession] = useState({});
   const sessionID = window.location.href.split("/").pop();
-  //console.log(sessionID)
 
-  const [modal, setModal] = React.useState(0);
+  let { datapoints, setReady, setModal, modal, webgazer } = useWebGazer();
+
   const handleClose = () => setModal(0);
 
   const handleQuestionModal = (event) => {
@@ -49,15 +55,19 @@ const Session = (props) => {
   };
 
   const handleBreakModal = (event) => {
-    setModal(2);
+    setModal(4);
   };
 
   const handleSummaryExtentModal = (event) => {
-    setModal(3);
+    setModal(2);
   };
 
   const handleChallengeModal = (event) => {
-    setModal(4);
+    setModal(3);
+  };
+
+  const handleCallibarationModel = (event) => {
+    setModal(5);
   };
 
   const getSession = async () => {
@@ -73,28 +83,57 @@ const Session = (props) => {
       setSession((await sessRef.get()).data());
     }
     setSetupLoading(false);
+    setModal(5);
   };
 
   useEffect(() => {
     getSession();
+
     //console.log(session.title)
   }, []);
 
   const handleQuestionPopup = () => {
     setModal(1);
+    webgazer.pause();
   };
-
+  const [chart, setChart] = useState(null);
+  useEffect(() => {
+    if (chart) chart.render();
+  }, [datapoints]);
+  if (setupLoading) {
+    return <Typography variant="h3">Loading...</Typography>;
+  }
   return (
     <>
       <NavLayout>
         <QuestionModal
-          handleClose={() => setModal(0)}
+          handleClose={() => {
+            setModal(0);
+            webgazer.resume();
+          }}
           open={modal === 1}
           questions={session.questions}
         />
         <SummaryExtentModal
-          handleClose={() => setModal(0)}
+          handleClose={() => {
+            setModal(0);
+            //webgazer.resume();
+          }}
           open={modal === 2}
+        />
+        <BreakModal
+          handleClose={() => {
+            setModal(0);
+            webgazer.resume();
+          }}
+          open={modal === 4}
+        />
+        <CallibarationModal
+          handleClose={() => {
+            setModal(0);
+            setReady(true);
+          }}
+          open={modal === 5}
         />
         <Grid container className={classes.navbar}>
           <Grid item style={{ flexGrow: 1 }}>
@@ -107,7 +146,13 @@ const Session = (props) => {
           </Grid>
         </Grid>
         <Grid container style={{ height: "100%" }}>
-          <Grid container item xs={9} style={{ height: "100%" }}>
+          <Grid
+            container
+            id="attention-focus-area"
+            item
+            xs={9}
+            style={{ height: "100%" }}
+          >
             <iframe
               src={session.fileURL}
               style={{ height: "100%", width: "100%" }}
@@ -129,7 +174,10 @@ const Session = (props) => {
                   }}
                 >
                   <CustomButton
-                    onClick={() => setModal(2)}
+                    onClick={() => {
+                      webgazer.pause();
+                      setModal(2);
+                    }}
                     styles={{
                       backgroundColor: "black",
                       color: "white",
@@ -159,9 +207,27 @@ const Session = (props) => {
                     marginBottom: 8,
                   }}
                 >
-                  <img
-                    src="https://circuits4you.com/wp-content/uploads/2019/01/line_chart_ESP8266.png"
-                    style={{ width: "90%", height: "30%", borderRadius: 8 }}
+                  <CanvasJSChart
+                    onRef={(ref) => setChart(ref)}
+                    options={{
+                      animationEnabled: true,
+                      axisY: {
+                        title: "Attention",
+                        gridThickness: 0,
+                      },
+                      axisX: {
+                        title: "Time",
+                      },
+                      title: {},
+                      data: [
+                        {
+                          type: "splineArea",
+                          color: "#00BFA6",
+                          markerSize: 5,
+                          dataPoints: datapoints,
+                        },
+                      ],
+                    }}
                   />
                 </div>
               </>
@@ -173,4 +239,12 @@ const Session = (props) => {
   );
 };
 
-export default Session;
+const WebGazerSession = () => {
+  return (
+    <WebGazeProvider>
+      <Session />
+    </WebGazeProvider>
+  );
+};
+
+export default WebGazerSession;

@@ -77,6 +77,16 @@ const modalStyles = makeStyles((theme) => ({
     fontFamily: "Solway",
     fontWeight: 700,
   },
+  circle: {
+    padding: 20,
+    marginLeft: 180,
+    marginRight: 100,
+    marginTop: 10,
+    display: "inline-block",
+    borderRadius: "50%",
+    width: 50,
+    height: 50,
+  },
 }));
 
 export const QuestionModal = ({ open, handleClose, questions }) => {
@@ -221,7 +231,9 @@ export const BreakModal = ({ open, handleClose }) => {
           09:57 min
         </Typography>
 
-        <Button className={classes.redBtn}>No take me back</Button>
+        <Button onClick={handleClose} className={classes.redBtn}>
+          No take me back
+        </Button>
       </div>
     </Modal>
   );
@@ -310,6 +322,117 @@ export const ChallengeModal = ({ open, handleClose }) => {
         </Button>
 
         <Button className={classes.redBtn}>No take me back</Button>
+      </div>
+    </Modal>
+  );
+};
+
+export const CallibarationModal = ({ open, handleClose }) => {
+  const classes = modalStyles();
+  var colors = [
+    "#393E41",
+    "#E94F37",
+    "#1C89BF",
+    "#A1D363",
+    "#C70039",
+    "#85FFC7",
+    "#297373",
+    "#FF8552",
+    "#36908e ",
+    "#FFC300 ",
+    "#449036",
+    "#581845",
+    "#337dff ",
+    "#838720 ",
+    "#873690",
+    "#AF8553",
+  ];
+  return (
+    <Modal open={open} onClose={handleClose} className={classes.modalRoot}>
+      <div className={classes.root} style={{ height: "100%", width: "100%" }}>
+        <Grid
+          container
+          style={{
+            marginTop: 8,
+            marginBottom: 20,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {colors.slice(0, 14).map((color, idx) => (
+            <>
+              <div
+                className={classes.circle}
+                style={{
+                  backgroundColor: color,
+                  textAlign: "center",
+                  cursor: "pointer",
+                }}
+                id={`ball-${idx}`}
+                onClick={(event) => {
+                  event.target.style.opacity =
+                    window
+                      .getComputedStyle(event.target)
+                      .getPropertyValue("opacity") - 0.2;
+                }}
+              >
+                <Typography
+                  className={classes.text}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    let divx = document.getElementById(`ball-${idx}`);
+                    divx.click();
+                  }}
+                  style={{ fontSize: 20, padding: 0, color: "white" }}
+                >
+                  {idx}
+                </Typography>
+              </div>
+              {idx == 3 ? (
+                <div style={{ width: "100%" }}></div>
+              ) : idx == 4 ? (
+                <div style={{ width: "100%" }}></div>
+              ) : idx == 5 ? (
+                <>
+                  <Typography
+                    className={classes.text}
+                    style={{
+                      opacity: 0.6,
+                      width: "50%",
+                      margin: "0 auto",
+                      textAlign: "center",
+                      marginTop: 10,
+                    }}
+                  >
+                    Help us callibarate the attention span tracker. Click on the
+                    colorful balls in order while focussing your eyes on the
+                    ball. This will help the tracker adjust to your eye
+                    movements and your surrounding environment settings.
+                    <br />
+                    <Button
+                      className={classes.redBtn}
+                      style={{
+                        backgroundColor: "black",
+                        padding: 12,
+                        paddingLeft: 30,
+                        paddingRight: 30,
+                        margin: 20,
+                      }}
+                      onClick={handleClose}
+                    >
+                      Click on this when all balls disappear!
+                    </Button>
+                  </Typography>
+                </>
+              ) : idx == 9 ? (
+                <div style={{ width: "100%" }}></div>
+              ) : (
+                <></>
+              )}
+            </>
+          ))}
+        </Grid>
       </div>
     </Modal>
   );
