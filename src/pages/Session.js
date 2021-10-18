@@ -12,6 +12,7 @@ import {
   QuestionModal,
   SummaryExtentModal,
   CallibarationModal,
+  BreakModal,
 } from "../components/Modals";
 import { WebGazeProvider, useWebGazer } from "../webgazer";
 import { CanvasJSChart } from "canvasjs-react-charts";
@@ -45,9 +46,8 @@ const Session = (props) => {
   const [session, setSession] = useState({});
   const sessionID = window.location.href.split("/").pop();
 
-  //console.log(sessionID)
+  let { datapoints, setReady, setModal, modal, webgazer } = useWebGazer();
 
-  const [modal, setModal] = React.useState(5);
   const handleClose = () => setModal(0);
 
   const handleQuestionModal = (event) => {
@@ -55,15 +55,15 @@ const Session = (props) => {
   };
 
   const handleBreakModal = (event) => {
-    setModal(2);
+    setModal(4);
   };
 
   const handleSummaryExtentModal = (event) => {
-    setModal(3);
+    setModal(2);
   };
 
   const handleChallengeModal = (event) => {
-    setModal(4);
+    setModal(3);
   };
 
   const handleCallibarationModel = (event) => {
@@ -83,21 +83,25 @@ const Session = (props) => {
       setSession((await sessRef.get()).data());
     }
     setSetupLoading(false);
+    setModal(5);
   };
 
   useEffect(() => {
     getSession();
+
     //console.log(session.title)
   }, []);
 
   const handleQuestionPopup = () => {
     setModal(1);
   };
-  let { datapoints } = useWebGazer();
   const [chart, setChart] = useState(null);
   useEffect(() => {
     if (chart) chart.render();
   }, [datapoints]);
+  if (setupLoading) {
+    return <Typography variant="h3">Loading...</Typography>;
+  }
   return (
     <>
       <NavLayout>
@@ -110,8 +114,18 @@ const Session = (props) => {
           handleClose={() => setModal(0)}
           open={modal === 2}
         />
+        <BreakModal
+          handleClose={() => {
+            setModal(0);
+            webgazer.resume();
+          }}
+          open={modal === 4}
+        />
         <CallibarationModal
-          handleClose={() => setModal(0)}
+          handleClose={() => {
+            setModal(0);
+            setReady(true);
+          }}
           open={modal === 5}
         />
         <Grid container className={classes.navbar}>
