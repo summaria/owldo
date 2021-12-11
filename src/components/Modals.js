@@ -239,7 +239,7 @@ export const BreakModal = ({ open, handleClose }) => {
   );
 };
 
-export const SummaryExtentModal = ({ open, handleClose }) => {
+export const SummaryExtentModal = ({ open, handleClose, createSummary }) => {
   const classes = modalStyles();
   const extents = [
     {
@@ -248,6 +248,7 @@ export const SummaryExtentModal = ({ open, handleClose }) => {
       subtitle: "20 mins",
       bgColor: "rgba(179, 137, 248, 0.2)",
       brColor: "rgba(179, 137, 248, 1)",
+      onClick: () => createSummary(0),
     },
     {
       src: Mediocre,
@@ -255,6 +256,7 @@ export const SummaryExtentModal = ({ open, handleClose }) => {
       subtitle: "12 mins",
       bgColor: "rgba(244, 28, 119, 0.27)",
       brColor: "rgba(244, 28, 119, 1)",
+      onClick: () => createSummary(1),
     },
     {
       src: Rushed,
@@ -262,6 +264,7 @@ export const SummaryExtentModal = ({ open, handleClose }) => {
       subtitle: "6 mins",
       bgColor: "rgba(252, 204, 99, 0.26)",
       brColor: "rgba(252, 204, 99, 1)",
+      onClick: () => createSummary(2),
     },
   ];
   return (

@@ -49,13 +49,10 @@ export const WebGazeProvider = ({ children }) => {
       history.shift();
     }
     if (history.filter((x) => x > ATTENTION_THRESHOLD).length === 0) {
-      if (!breakflag) {
+      if (!breakflag && countx > 120) {
         setModal(4);
         webgazer.pause();
         breakflag = true;
-        setTimeout(() => {
-          breakflag = false;
-        }, 20000);
       }
     }
 

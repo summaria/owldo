@@ -16,6 +16,7 @@ import {
 } from "../components/Modals";
 import { WebGazeProvider, useWebGazer } from "../webgazer";
 import { CanvasJSChart } from "canvasjs-react-charts";
+import sessionAPI from "../api/sessions";
 const useStyles = makeStyles(() => ({
   navbar: {
     backgroundColor: "#00BFA6",
@@ -91,7 +92,7 @@ const Session = (props) => {
 
     //console.log(session.title)
   }, []);
-
+  const [summary, setSummary] = useState(null);
   const handleQuestionPopup = () => {
     setModal(1);
     webgazer.pause();
@@ -102,6 +103,47 @@ const Session = (props) => {
   }, [datapoints]);
   if (setupLoading) {
     return <Typography variant="h3">Loading...</Typography>;
+  } else if (summary !== null) {
+    return (
+      <NavLayout>
+        <CustomButton
+          onClick={() => {
+            setSummary(null);
+          }}
+          styles={{
+            backgroundColor: "white",
+            color: "black",
+            padding: "2% 8%",
+            marginTop: 12,
+          }}
+        >
+          Go back
+        </CustomButton>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 40,
+          }}
+        >
+          <Typography variant="h3" style={{ color: "red" }}>
+            Type: {summary.extend}
+          </Typography>
+        </div>
+        <Typography
+          variant="p"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 40,
+          }}
+        >
+          {summary.summary}
+        </Typography>
+      </NavLayout>
+    );
   }
   return (
     <>
@@ -120,6 +162,22 @@ const Session = (props) => {
             //webgazer.resume();
           }}
           open={modal === 2}
+          createSummary={async (extent) => {
+            try {
+              let summary = await sessionAPI.createSummary({
+                id: sessionID,
+                extent,
+              });
+              console.log(summary);
+              setSummary({
+                extend:
+                  extent === 0 ? "hard" : extent === 1 ? "medium" : "easy",
+                summary,
+              });
+            } catch (err) {
+              console.log(err);
+            }
+          }}
         />
         <BreakModal
           handleClose={() => {
