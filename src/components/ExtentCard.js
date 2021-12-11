@@ -22,13 +22,21 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function ExtentCard({ src, title, subtitle, bgColor, brColor }) {
+export default function ExtentCard({
+  src,
+  title,
+  subtitle,
+  bgColor,
+  brColor,
+  onClick,
+}) {
   const classes = useStyles();
 
   return (
     <Card
       className={classes.root}
       style={{ backgroundColor: `${bgColor}`, border: `1px solid ${brColor}` }}
+      onClick={onClick}
     >
       <img src={src} style={{ height: 100, width: 100 }} />
       <Typography

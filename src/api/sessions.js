@@ -47,9 +47,32 @@ const getSession = async ({ sessionId }) => {
   }
 };
 
+const createSummary = async ({ id, extent }) => {
+  try {
+    let result = await fetch(API_SERVER_URL + "/session/summary", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id,
+        extent,
+      }),
+    });
+    result = await result.json();
+    console.log(result.data);
+    return result.data;
+  } catch (err) {
+    console.log(err);
+    return "Error!";
+  }
+};
+
 const sessionAPI = {
   createSession,
   getSession,
   setupSession,
+  createSummary,
 };
 export default sessionAPI;

@@ -98,7 +98,7 @@ const CreateSession = () => {
     await FIRESTORE.createSession({
       title,
       fileURL,
-      userId: auth.currentUser.uid,
+      userId: auth?.currentUser?.uid,
     });
 
     setLoading(false);
